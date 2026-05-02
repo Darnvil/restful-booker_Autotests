@@ -3,6 +3,8 @@ package tests
 import config.BaseTest
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
+import models.AuthRequest
+import models.AuthResponse
 import models.Booking
 import models.BookingDates
 import models.BookingResponse
@@ -89,5 +91,56 @@ class BookingTest : BaseTest() {
         assertEquals(createdBooking.booking.lastname, foundBooking.lastname)
         assertEquals(createdBooking.booking.totalprice, foundBooking.totalprice)
         assertEquals(createdBooking.booking.bookingdates.checkin, foundBooking.bookingdates.checkin)
+    }
+
+    @Test
+    fun `delete booking and check if booking was not found`() {
+        val booking = Booking(
+            "firstname",
+            "lastname",
+            150,
+            true,
+            BookingDates("2013-11-11", "2015-11-11"),
+            null
+        )
+
+        val user = AuthRequest("admin", "password123")
+
+        val token = given()
+            .log().ifValidationFails()
+            .contentType(ContentType.JSON)
+            .body(user)
+            .post("/auth")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .extract().`as`(AuthResponse::class.java)
+            .token ?: error("Token was not received")
+
+        val createdBooking = given()
+            .log().ifValidationFails()
+            .contentType(ContentType.JSON)
+            .body(booking)
+            .post("/booking")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .extract().`as`(BookingResponse::class.java)
+
+
+        given()
+            .log().ifValidationFails()
+            .cookie("token", token)
+            .delete("/booking/${createdBooking.bookingid}")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(201)
+
+        given()
+            .log().ifValidationFails()
+            .get("/booking/${createdBooking.bookingid}")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(404)
     }
 }
