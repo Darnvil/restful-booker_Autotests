@@ -13,3 +13,8 @@ data class Booking(
     val bookingdates: BookingDates,
     val additionalneeds: String?
 )
+
+data class BookingResponse(
+    val bookingid: Int,
+    val booking: Booking
+)
