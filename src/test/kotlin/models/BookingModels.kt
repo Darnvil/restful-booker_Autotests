@@ -11,5 +11,5 @@ data class Booking(
     val totalprice: Int,
     val depositpaid: Boolean,
     val bookingdates: BookingDates,
-    val additionalneeds: String
+    val additionalneeds: String?
 )

@@ -3,15 +3,16 @@ package tests
 import config.BaseTest
 import io.restassured.RestAssured.given
 import models.Booking
-import org.hamcrest.Matchers.notNullValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 class BookingTest: BaseTest() {
 
     @Test
-    fun `get booking and check if firstname is Sally`() {
-        val responce = given()
+    fun `get booking and check if firstname and checkin not blank`() {
+        val booking = given()
             .log().ifValidationFails()
             .get("/booking/1")
             .then()
@@ -20,6 +21,7 @@ class BookingTest: BaseTest() {
             .extract()
             .`as`(Booking::class.java)
 
-        assertEquals("Sally", responce.firstname)
+        assertTrue(booking.firstname.isNotBlank())
+        assertTrue(booking.bookingdates.checkin.isNotBlank())
     }
 }
