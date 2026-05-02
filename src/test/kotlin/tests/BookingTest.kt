@@ -54,4 +54,40 @@ class BookingTest : BaseTest() {
         assertEquals(booking.lastname, createdBooking.booking.lastname)
         assertEquals(booking.totalprice, createdBooking.booking.totalprice)
     }
+
+    @Test
+    fun `create booking and check if created booking was found`() {
+        val booking = Booking(
+            "firstname",
+            "lastname",
+            150,
+            true,
+            BookingDates("2013-11-11", "2015-11-11"),
+            null
+        )
+
+        val createdBooking = given()
+            .log().ifValidationFails()
+            .contentType(ContentType.JSON)
+            .body(booking)
+            .post("/booking")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .extract().`as`(BookingResponse::class.java)
+
+        val foundBooking = given()
+            .log().ifValidationFails()
+            .contentType(ContentType.JSON)
+            .get("/booking/${createdBooking.bookingid}")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .extract().`as`(Booking::class.java)
+
+        assertEquals(createdBooking.booking.firstname, foundBooking.firstname)
+        assertEquals(createdBooking.booking.lastname, foundBooking.lastname)
+        assertEquals(createdBooking.booking.totalprice, foundBooking.totalprice)
+        assertEquals(createdBooking.booking.bookingdates.checkin, foundBooking.bookingdates.checkin)
+    }
 }
