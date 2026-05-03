@@ -1,5 +1,7 @@
 plugins {
     kotlin("jvm") version "2.3.20"
+
+    id("io.qameta.allure-report") version "4.0.1"
 }
 
 group = "org.example"
@@ -16,6 +18,9 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured:6.0.0")
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+
+    testImplementation("io.qameta.allure:allure-junit5:2.29.1")
+    testImplementation("io.qameta.allure:allure-rest-assured:2.29.1")
 }
 
 kotlin {
@@ -24,4 +29,8 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+allure {
+    version.set("2.29.0")
 }
