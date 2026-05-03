@@ -1,5 +1,6 @@
 package api
 
+import config.Config
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import models.AuthRequest
@@ -18,7 +19,7 @@ object AuthApi {
             .extract().`as`(AuthResponse::class.java)
 
     fun getAuthToken(): String {
-        val authRequest = AuthRequest("admin", "password123")
+        val authRequest = AuthRequest(Config.username, Config.password)
 
         return authorize(authRequest)
             .token ?: error("Token was not received")

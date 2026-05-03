@@ -2,6 +2,7 @@ package tests
 
 import api.AuthApi.authorize
 import config.BaseTest
+import config.Config
 
 import models.AuthRequest
 import org.junit.jupiter.api.Test
@@ -14,7 +15,7 @@ class AuthTest: BaseTest() {
 
     @Test
     fun `auth with correct password`() {
-        val creds = AuthRequest("admin", "password123")
+        val creds = AuthRequest(Config.username, Config.password)
 
         val auth = authorize(creds)
 
@@ -24,7 +25,7 @@ class AuthTest: BaseTest() {
 
     @Test
     fun `auth with incorrect password`() {
-        val creds = AuthRequest("admin", "pass")
+        val creds = AuthRequest(Config.username, "123")
 
         val auth = authorize(creds)
 

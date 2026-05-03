@@ -9,6 +9,6 @@ open class BaseTest {
 
     @BeforeAll
     fun setup() {
-        baseURI = "https://restful-booker.herokuapp.com"
+        baseURI = Config.baseUri
     }
 }
