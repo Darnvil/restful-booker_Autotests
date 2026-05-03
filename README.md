@@ -33,10 +33,11 @@ API test framework for [Restful Booker](https://restful-booker.herokuapp.com)
 fun `create booking and verify it can be retrieved`() {
     val booking = booking(firstname = "John")
 
-    val created = createBooking(booking)
-    val found = getBookingAsModel(created.bookingid)
+    val createdBooking = createBooking(booking)
 
-    found.shouldMatch(booking)
+    val foundBooking = getBookingAsModel(createdBooking.bookingid)
+
+    foundBooking.shouldMatch(booking)
 }
 ```
 

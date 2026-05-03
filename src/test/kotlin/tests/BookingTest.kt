@@ -29,7 +29,7 @@ class BookingTest : BaseTest() {
     }
 
     @Test
-    fun `create booking and check if success`() {
+    fun `create booking and check if it was success`() {
         val booking = booking()
 
         val createdBooking = createBooking(booking)
@@ -39,8 +39,8 @@ class BookingTest : BaseTest() {
     }
 
     @Test
-    fun `create booking and check if created booking was found`() {
-        val booking = booking(totalprice = 100)
+    fun `create booking and verify it can be retrieved`() {
+        val booking = booking(firstname = "John")
 
         val createdBooking = createBooking(booking)
 
