@@ -3,7 +3,7 @@ package utils
 import models.Booking
 import models.BookingDates
 
-fun createTestBooking(
+fun booking(
     firstname: String = "firstname",
     lastname: String = "lastname",
     totalprice: Int = 100,

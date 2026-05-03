@@ -6,7 +6,7 @@ import api.BookingApi.deleteBooking
 import api.BookingApi.getBooking
 import api.BookingApi.getBookingAsModel
 import config.BaseTest
-import utils.createTestBooking
+import utils.booking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -23,7 +23,7 @@ class BookingTest : BaseTest() {
 
     @Test
     fun `create booking and check if success`() {
-        val booking = createTestBooking()
+        val booking = booking()
 
         val createdBooking = createBooking(booking)
 
@@ -35,7 +35,7 @@ class BookingTest : BaseTest() {
 
     @Test
     fun `create booking and check if created booking was found`() {
-        val booking = createTestBooking(totalprice = 100)
+        val booking = booking(totalprice = 100)
 
         val createdBooking = createBooking(booking)
 
@@ -49,7 +49,7 @@ class BookingTest : BaseTest() {
 
     @Test
     fun `delete booking and check if booking was not found`() {
-        val booking = createTestBooking(firstname = "John")
+        val booking = booking(firstname = "John")
 
         val token = getAuthToken()
 
