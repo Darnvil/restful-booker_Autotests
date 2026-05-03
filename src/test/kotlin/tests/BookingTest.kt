@@ -1,30 +1,22 @@
 package tests
 
+import api.AuthApi.getAuthToken
+import api.BookingApi.createBooking
+import api.BookingApi.deleteBooking
+import api.BookingApi.getBooking
+import api.BookingApi.getBookingAsModel
 import config.BaseTest
-import io.restassured.RestAssured.given
-import io.restassured.http.ContentType
-import models.AuthRequest
-import models.AuthResponse
 import models.Booking
 import models.BookingDates
-import models.BookingResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class BookingTest : BaseTest() {
 
     @Test
     fun `get booking and check if firstname and checkin not blank`() {
-        val booking = given()
-            .log().ifValidationFails()
-            .get("/booking/1")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(200)
-            .extract()
-            .`as`(Booking::class.java)
+        val booking = getBookingAsModel(1)
 
         assertTrue(booking.firstname.isNotBlank())
         assertTrue(booking.bookingdates.checkin.isNotBlank())
@@ -41,15 +33,8 @@ class BookingTest : BaseTest() {
             null
         )
 
-        val createdBooking = given()
-            .log().ifValidationFails()
-            .contentType(ContentType.JSON)
-            .body(booking)
-            .post("/booking")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(200)
-            .extract().`as`(BookingResponse::class.java)
+        val createdBooking = createBooking(booking)
+
 
         assertTrue(createdBooking.bookingid > 0)
         assertEquals(booking.firstname, createdBooking.booking.firstname)
@@ -68,24 +53,9 @@ class BookingTest : BaseTest() {
             null
         )
 
-        val createdBooking = given()
-            .log().ifValidationFails()
-            .contentType(ContentType.JSON)
-            .body(booking)
-            .post("/booking")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(200)
-            .extract().`as`(BookingResponse::class.java)
+        val createdBooking = createBooking(booking)
 
-        val foundBooking = given()
-            .log().ifValidationFails()
-            .contentType(ContentType.JSON)
-            .get("/booking/${createdBooking.bookingid}")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(200)
-            .extract().`as`(Booking::class.java)
+        val foundBooking = getBookingAsModel(createdBooking.bookingid)
 
         assertEquals(createdBooking.booking.firstname, foundBooking.firstname)
         assertEquals(createdBooking.booking.lastname, foundBooking.lastname)
@@ -104,43 +74,13 @@ class BookingTest : BaseTest() {
             null
         )
 
-        val user = AuthRequest("admin", "password123")
+        val token = getAuthToken()
 
-        val token = given()
-            .log().ifValidationFails()
-            .contentType(ContentType.JSON)
-            .body(user)
-            .post("/auth")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(200)
-            .extract().`as`(AuthResponse::class.java)
-            .token ?: error("Token was not received")
+        val createdBooking = createBooking(booking)
 
-        val createdBooking = given()
-            .log().ifValidationFails()
-            .contentType(ContentType.JSON)
-            .body(booking)
-            .post("/booking")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(200)
-            .extract().`as`(BookingResponse::class.java)
+       deleteBooking(createdBooking.bookingid, token)
 
-
-        given()
-            .log().ifValidationFails()
-            .cookie("token", token)
-            .delete("/booking/${createdBooking.bookingid}")
-            .then()
-            .log().ifValidationFails()
-            .statusCode(201)
-
-        given()
-            .log().ifValidationFails()
-            .get("/booking/${createdBooking.bookingid}")
-            .then()
-            .log().ifValidationFails()
+        getBooking(createdBooking.bookingid)
             .statusCode(404)
     }
 }
