@@ -3,6 +3,7 @@ package tests
 import api.AuthApi.getAuthToken
 import api.BookingApi.createBooking
 import api.BookingApi.deleteBooking
+import api.BookingApi.deleteBookingWithoutToken
 import api.BookingApi.getBooking
 import api.BookingApi.getBookingAsModel
 import assertions.shouldMatch
@@ -19,6 +20,12 @@ class BookingTest : BaseTest() {
 
         assertTrue(booking.firstname.isNotBlank())
         assertTrue(booking.bookingdates.checkin.isNotBlank())
+    }
+
+    @Test
+    fun `get nonexistent booking returns 404`() {
+        getBooking(999999999)
+            .statusCode(404)
     }
 
     @Test
@@ -54,5 +61,15 @@ class BookingTest : BaseTest() {
 
         getBooking(createdBooking.bookingid)
             .statusCode(404)
+    }
+
+    @Test
+    fun `delete booking without token returns 403`() {
+        val booking = booking(firstname = "John")
+
+        val createdBooking = createBooking(booking)
+
+        deleteBookingWithoutToken(createdBooking.bookingid)
+            .statusCode(403)
     }
 }

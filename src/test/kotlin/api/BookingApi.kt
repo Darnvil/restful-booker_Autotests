@@ -43,4 +43,11 @@ object BookingApi {
             .log().ifValidationFails()
             .statusCode(201)
 
+    fun deleteBookingWithoutToken(bookingid: Int) =
+        given()
+            .log().ifValidationFails()
+            .delete("/booking/${bookingid}")
+            .then()
+            .log().ifValidationFails()
+
 }
