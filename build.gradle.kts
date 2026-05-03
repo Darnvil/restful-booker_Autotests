@@ -11,6 +11,8 @@ repositories {
     mavenCentral()
 }
 
+val aspectjAgent by configurations.creating
+
 dependencies {
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
@@ -21,6 +23,8 @@ dependencies {
 
     testImplementation("io.qameta.allure:allure-junit5:2.29.1")
     testImplementation("io.qameta.allure:allure-rest-assured:2.29.1")
+
+    aspectjAgent("org.aspectj:aspectjweaver:1.9.22.1")
 }
 
 kotlin {
@@ -29,6 +33,8 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+
+    jvmArgs("-javaagent:${aspectjAgent.singleFile}")
 }
 
 allure {
