@@ -5,10 +5,10 @@ import api.BookingApi.createBooking
 import api.BookingApi.deleteBooking
 import api.BookingApi.getBooking
 import api.BookingApi.getBookingAsModel
+import assertions.shouldMatch
 import config.BaseTest
 import utils.booking
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class BookingTest : BaseTest() {
@@ -28,9 +28,7 @@ class BookingTest : BaseTest() {
         val createdBooking = createBooking(booking)
 
         assertTrue(createdBooking.bookingid > 0)
-        assertEquals(booking.firstname, createdBooking.booking.firstname)
-        assertEquals(booking.lastname, createdBooking.booking.lastname)
-        assertEquals(booking.totalprice, createdBooking.booking.totalprice)
+        createdBooking.booking.shouldMatch(booking)
     }
 
     @Test
@@ -41,10 +39,7 @@ class BookingTest : BaseTest() {
 
         val foundBooking = getBookingAsModel(createdBooking.bookingid)
 
-        assertEquals(booking.firstname, foundBooking.firstname)
-        assertEquals(booking.lastname, foundBooking.lastname)
-        assertEquals(booking.totalprice, foundBooking.totalprice)
-        assertEquals(booking.bookingdates.checkin, foundBooking.bookingdates.checkin)
+        foundBooking.shouldMatch(booking)
     }
 
     @Test
