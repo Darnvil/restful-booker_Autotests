@@ -35,6 +35,18 @@ tasks.test {
     useJUnitPlatform()
 
     jvmArgs("-javaagent:${aspectjAgent.singleFile}")
+
+    val includeTags = System.getProperty("tags")
+    if (includeTags != null) {
+        useJUnitPlatform {
+            includeTags(includeTags)
+        }
+    }
+
+    testLogging {
+        events("passed", "skipped", "failed")
+        showStandardStreams = true
+    }
 }
 
 allure {

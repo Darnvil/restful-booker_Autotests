@@ -8,26 +8,32 @@ import api.BookingApi.getBooking
 import api.BookingApi.getBookingAsModel
 import assertions.shouldMatch
 import config.BaseTest
+import org.junit.jupiter.api.Tag
 import utils.booking
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class BookingTest : BaseTest() {
 
+    @Tag("smoke")
+    @Tag("regression")
     @Test
     fun `get booking and check if firstname and checkin not blank`() {
-        val booking = getBookingAsModel(1)
+        val booking = getBookingAsModel(2)
 
         assertTrue(booking.firstname.isNotBlank())
         assertTrue(booking.bookingdates.checkin.isNotBlank())
     }
 
+    @Tag("negative")
+    @Tag("regression")
     @Test
     fun `get nonexistent booking returns 404`() {
         getBooking(999999999)
             .statusCode(404)
     }
 
+    @Tag("regression")
     @Test
     fun `create booking and check if it was success`() {
         val booking = booking()
@@ -38,6 +44,7 @@ class BookingTest : BaseTest() {
         createdBooking.booking.shouldMatch(booking)
     }
 
+    @Tag("regression")
     @Test
     fun `create booking and verify it can be retrieved`() {
         val booking = booking(firstname = "John")
@@ -49,6 +56,7 @@ class BookingTest : BaseTest() {
         foundBooking.shouldMatch(booking)
     }
 
+    @Tag("regression")
     @Test
     fun `delete booking and check if booking was not found`() {
         val booking = booking(firstname = "John")
@@ -63,6 +71,8 @@ class BookingTest : BaseTest() {
             .statusCode(404)
     }
 
+    @Tag("regression")
+    @Tag("negative")
     @Test
     fun `delete booking without token returns 403`() {
         val booking = booking(firstname = "John")
