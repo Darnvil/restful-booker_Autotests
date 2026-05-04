@@ -5,7 +5,7 @@ import models.Booking
 
 import kotlin.test.assertEquals
 
-@Step("Get booking with id = {bookingId}")
+@Step("Check if booking match expected")
 fun Booking.shouldMatch(expected: Booking) {
     assertEquals(expected.firstname, this.firstname, "firstname mismatch")
     assertEquals(expected.lastname, this.lastname,  "lastname mismatch")
