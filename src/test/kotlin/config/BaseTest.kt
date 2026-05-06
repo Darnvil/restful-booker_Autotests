@@ -21,6 +21,6 @@ open class BaseTest {
                 }
             }
         }
-            TestContext.clearBookingIds()
+        TestContext.clearBookingIds()
     }
 }

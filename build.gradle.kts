@@ -24,6 +24,8 @@ dependencies {
     testImplementation("io.qameta.allure:allure-junit5:2.29.1")
     testImplementation("io.qameta.allure:allure-rest-assured:2.29.1")
 
+    testImplementation("io.rest-assured:json-schema-validator:6.0.0")
+
     aspectjAgent("org.aspectj:aspectjweaver:1.9.22.1")
 }
 

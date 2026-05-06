@@ -8,6 +8,7 @@ import api.BookingApi.getBooking
 import api.BookingApi.getBookingAsModel
 import assertions.shouldMatch
 import config.BaseTest
+import io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath
 import org.junit.jupiter.api.Tag
 import utils.booking
 import kotlin.test.Test
@@ -23,6 +24,14 @@ class BookingTest : BaseTest() {
 
         assertTrue(booking.firstname.isNotBlank())
         assertTrue(booking.bookingdates.checkin.isNotBlank())
+    }
+
+    @Tag("regression")
+    @Test
+    fun `get booking response matches schema`() {
+        getBooking(2)
+            .statusCode(200)
+            .body(matchesJsonSchemaInClasspath("schemas/booking-schema.json"))
     }
 
     @Tag("negative")

@@ -8,7 +8,7 @@ object Config {
     private val props = Properties().apply {
 
         val stream = ClassLoader
-            .getSystemResourceAsStream("config.properties")
+            .getSystemResourceAsStream("config/config.properties")
             ?: error("config.properties not found")
 
         load(stream)
