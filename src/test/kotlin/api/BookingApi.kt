@@ -1,5 +1,6 @@
 package api
 
+import config.TestContext
 import config.requestSpec
 import config.responseSpec
 import io.qameta.allure.Step
@@ -31,8 +32,8 @@ object BookingApi {
             .extract().`as`(Booking::class.java)
 
     @Step("Create booking")
-    fun createBooking(booking: Booking): BookingResponse =
-        given()
+    fun createBooking(booking: Booking): BookingResponse {
+        val response = given()
             .spec(requestSpec)
             .contentType(ContentType.JSON)
             .body(booking)
@@ -42,6 +43,12 @@ object BookingApi {
             .log().ifValidationFails()
             .statusCode(200)
             .extract().`as`(BookingResponse::class.java)
+
+        TestContext.addBookingId(response.bookingid)
+
+        return response
+    }
+
 
     @Step("Delete booking with id = {bookingid}")
     fun deleteBooking(bookingid: Int, token: String) =
